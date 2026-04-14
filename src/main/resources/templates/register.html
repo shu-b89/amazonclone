@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body th:style="'background-image: url(/images/Nature.jpg); background-size:cover;'">
+<h1>Registration Form</h1>
+<div th:if="${Success}">
+<h1 style="color:green;" th:text="${Success}" ></h1>
+</div>
+<div th:if="${errorMsg}">
+<h1 style="color:red;" th:text="${errorMsg}" ></h1>
+</div>
+
+<form th:action="@{/regForm}" th:object="${user}" method="post">
+Name:-<input type="text" th:field="*{name}"/><br/><br/>
+Email_id:-<input type="text" th:field="*{email}"/><br/><br/>
+Password:-<input type="password" th:field="*{password}"/><br/><br/>
+Phone_no:-<input type="text" th:field="*{phoneno}"/><br/><br/>
+
+<img src="/images/Nature.jpg" alt="Nature image" width="200">
+
+<input type="submit" value="Register">
+
+</form>
+</body>
+</html>

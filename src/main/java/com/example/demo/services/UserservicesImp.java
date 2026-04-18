@@ -1,21 +1,21 @@
 package com.example.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.security.autoconfigure.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Details.UserDetails;
 import com.example.demo.exception.DuplicateEmailException;
 import com.example.demo.exception.InvalidCredentialsException;
 import com.example.demo.repoository.UserRepository;
+import com.example.demo.enity.User;
 
 @Service
 public class UserservicesImp implements UserServices {
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository userRepository; 
 	
 	@Override
-	public user register(UserDetails Details) {
+	public User register(UserDetails Details) {
 		if (userRepository.existsByEmail(Details.getEmail())) {
 			throw new DuplicateEmailException("Email already registered:" + Details.getEmail());
 		}
@@ -25,7 +25,7 @@ public class UserservicesImp implements UserServices {
 		user.setEmail(Details.getEmail());
 		user.setPassword(Details.getPassword());
 		user.setPhone(Details.getPhone());
-		user.setRoles("User");
+		user.setRole("User");
 		
 		return userRepository.save(user);
 	}

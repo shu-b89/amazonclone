@@ -27,5 +27,16 @@ public class AccountController {
 	    
 	}
 
+	public boolean existsByEmail(String email) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public org.springframework.boot.security.autoconfigure.SecurityProperties.User save(
+			org.springframework.boot.security.autoconfigure.SecurityProperties.User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

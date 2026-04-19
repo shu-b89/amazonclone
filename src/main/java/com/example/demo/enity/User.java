@@ -42,12 +42,23 @@ public class User {
     public void setPassword(String password) { this.password = password; }
 
     public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+//    public void setPhone(String phone) { this.phone = phone; }
 
     public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+//    public void setRole(String role) { this.role = role; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+	public void setPhone(String phone2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setRole(String string) {
+		
+		// TODO Auto-generated method stub
+		
+	}
 
 }

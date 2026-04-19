@@ -10,13 +10,13 @@ import com.example.demo.repoository.UserRepository;
 import com.example.demo.enity.User;
 
 @Service
-public class UserservicesImp implements UserServices {
+public abstract class UserservicesImp implements UserServices {
 	@Autowired
 	private UserRepository userRepository; 
 	
 	@Override
 	public User register(UserDetails Details) {
-		if (userRepository.existsByEmail(Details.getEmail())) {
+		if (userRepository.findByEmail(Details.getEmail())) {
 			throw new DuplicateEmailException("Email already registered:" + Details.getEmail());
 		}
 		
@@ -38,7 +38,7 @@ public class UserservicesImp implements UserServices {
 		return user;
 	}
 	@Override
-	public User findByEmail(String email) {
+	public boolean findByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
 	

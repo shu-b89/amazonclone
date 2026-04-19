@@ -6,10 +6,12 @@ import com.example.demo.enity.User;
 
 public interface UserRepository extends JpaRepository<User, Integer>
 {
-	User findByEmail(String email);
 
-    boolean existsByEmail(String email);
+    User existsByEmail(String email);
 
     User findByEmailAndPassword(String email, String password);
+
+	User findByEmail(String email);
+
 
 }

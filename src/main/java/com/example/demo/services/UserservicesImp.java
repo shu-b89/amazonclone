@@ -10,7 +10,7 @@ import com.example.demo.entity.User;
 import com.example.demo.entity.UserDetails;
 
 @Service
-public abstract class UserservicesImp implements UserServices {
+public class UserservicesImp implements UserServices {
 	@Autowired
 	private UserRepository userRepository; 
 	
@@ -40,6 +40,11 @@ public abstract class UserservicesImp implements UserServices {
 	@Override
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
+	}
+	@Override
+	public boolean registerUser(User user) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

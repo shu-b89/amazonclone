@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.entity.User;
-import com.example.demo.services.UserService;
+import com.example.demo.services.UserServices;
 
 @Controller
 public class Mycontroller 
 {
 	@Autowired
-	private UserService userserv;
+	private UserServices userserv;
 	
     @GetMapping("/regPage")
 	public String openRegPage(Model model)

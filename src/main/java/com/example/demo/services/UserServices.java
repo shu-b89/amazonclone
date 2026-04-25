@@ -10,4 +10,6 @@ public interface UserServices {
     User login(String email, String password);
 
     User findByEmail(String email);
+
+	boolean registerUser(User user);
 }

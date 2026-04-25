@@ -1,4 +1,4 @@
-package com.example.demo.Details;
+package com.example.demo.enity;
 
 public class UserDetails {
 	private String name;

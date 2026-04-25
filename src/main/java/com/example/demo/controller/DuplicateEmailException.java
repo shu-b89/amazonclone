@@ -1,4 +1,4 @@
-package com.example.demo.exception;
+package com.example.demo.controller;
 
 public class DuplicateEmailException extends RuntimeException {
 	public DuplicateEmailException(String massage) {

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.demo.enity.User;
+import com.example.demo.entity.User;
 import com.example.demo.services.UserService;
 
 @Controller

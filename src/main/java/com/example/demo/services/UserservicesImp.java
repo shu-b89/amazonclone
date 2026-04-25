@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.repoository.UserRepository;
 import com.example.demo.controller.DuplicateEmailException;
 import com.example.demo.controller.InvalidCredentialsException;
-import com.example.demo.enity.User;
-import com.example.demo.enity.UserDetails;
+import com.example.demo.entity.User;
+import com.example.demo.entity.UserDetails;
 
 @Service
 public abstract class UserservicesImp implements UserServices {

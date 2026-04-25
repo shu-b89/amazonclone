@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
-import com.example.demo.enity.User;
-import com.example.demo.enity.UserDetails;
+import com.example.demo.entity.User;
+import com.example.demo.entity.UserDetails;
 
 public interface UserServices {
 

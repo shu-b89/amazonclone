@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>My Wishlist – StyleMart</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0f1923; --navy2: #1a2736; --gold: #e8a020; --gold2: #f5c842;
+    --cream: #faf7f2; --white: #ffffff; --gray1: #f4f1ec; --gray2: #e0dbd2;
+    --gray3: #a89e92; --gray4: #6b6059; --text: #1a1410; --red: #c0392b;
+    --radius: 4px; --shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); }
+  nav { background: var(--navy); color: var(--white); position: sticky; top: 0; z-index: 100; }
+  .nav-top { display: flex; align-items: center; gap: 12px; padding: 10px 20px; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--gold2); text-decoration: none; }
+  .logo span { color: var(--white); font-size: 11px; display: block; font-weight: 300; letter-spacing: 2px; margin-top: -4px; }
+  .nav-search { flex: 1; display: flex; max-width: 700px; }
+  .nav-search input { flex: 1; height: 40px; border: none; padding: 0 12px; font-size: 14px; font-family: 'DM Sans', sans-serif; }
+  .nav-search button { background: var(--gold); border: none; height: 40px; width: 44px; border-radius: 0 var(--radius) var(--radius) 0; cursor: pointer; font-size: 18px; }
+  .nav-actions { display: flex; gap: 4px; margin-left: auto; }
+  .nav-btn { background: transparent; border: none; color: var(--white); cursor: pointer; padding: 6px 10px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 13px; line-height: 1.3; text-align: left; text-decoration: none; display: inline-block; }
+  .nav-btn:hover { background: rgba(255,255,255,0.1); }
+  .nav-btn .line1 { font-size: 11px; color: var(--gray3); display: block; }
+  .nav-btn .line2 { font-size: 14px; font-weight: 600; display: block; }
+
+  .section { padding: 32px 20px; max-width: 1280px; margin: 0 auto; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 24px; }
+
+  .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .prod-card { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; text-decoration: none; color: var(--text); transition: box-shadow 0.2s, transform 0.15s; }
+  .prod-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.16); transform: translateY(-2px); }
+  .prod-img { background: var(--gray1); height: 200px; display: flex; align-items: center; justify-content: center; font-size: 72px; }
+  .prod-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
+  .prod-brand { font-size: 11px; color: var(--gray3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+  .prod-name { font-size: 14px; font-weight: 500; line-height: 1.4; margin-bottom: 6px; flex: 1; }
+  .prod-price { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .btn-view { width: 100%; background: var(--gold); border: none; border-radius: var(--radius); padding: 9px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--navy); cursor: pointer; text-align: center; display: block; text-decoration: none; }
+  .btn-view:hover { background: var(--gold2); }
+
+  .empty-state { text-align: center; padding: 80px 20px; color: var(--gray4); }
+  .empty-state div { font-size: 72px; margin-bottom: 20px; }
+  .empty-state h2 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 10px; color: var(--text); }
+  .empty-state p { font-size: 15px; margin-bottom: 24px; }
+  .btn-primary { background: var(--gold); color: var(--navy); border: none; padding: 12px 28px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-top">
+    <a class="logo" th:href="@{/home}">StyleMart<span>FASHION STORE</span></a>
+    <form class="nav-search" th:action="@{/search}" method="get">
+      <input type="text" name="q" placeholder="Search StyleMart..."/>
+      <button type="submit">🔍</button>
+    </form>
+    <div class="nav-actions">
+      <a class="nav-btn" th:href="@{/account}">
+        <span class="line1">Hello,</span>
+        <span class="line2" th:text="${session.loggedInUser != null ? session.loggedInUser.name : 'Sign In'}">User</span>
+      </a>
+      <a class="nav-btn" th:href="@{/orders}">
+        <span class="line1">Returns &</span>
+        <span class="line2">Orders</span>
+      </a>
+      <a class="nav-btn" th:href="@{/cart}">
+        🛒 <span class="line2">Cart</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- WISHLIST SECTION -->
+<div class="section">
+  <div class="section-title">❤️ My Wishlist</div>
+
+  <!-- Products in Wishlist -->
+  <div class="prod-grid" th:if="${not #lists.isEmpty(wishlistProducts)}">
+    <div class="prod-card" th:each="product : ${wishlistProducts}">
+      <a th:href="@{/products/{id}(id=${product.id})}">
+        <div class="prod-img">
+          <span th:text="${product.imageUrl}">👗</span>
+        </div>
+      </a>
+      <div class="prod-info">
+        <div class="prod-brand" th:text="${product.brand}">Brand</div>
+        <div class="prod-name" th:text="${product.name}">Name</div>
+        <div class="prod-price" th:text="'₹' + ${product.price}">₹999</div>
+        <a class="btn-view"
+           th:href="@{/products/{id}(id=${product.id})}">
+          View Product →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty Wishlist -->
+  <div class="empty-state" th:if="${#lists.isEmpty(wishlistProducts)}">
+    <div>❤️</div>
+    <h2>Your Wishlist is Empty</h2>
+    <p>Save your favourite items here and shop them anytime!</p>
+    <a class="btn-primary" th:href="@{/products}">Start Browsing</a>
+  </div>
+
+</div>
+
+</body>
+</html>

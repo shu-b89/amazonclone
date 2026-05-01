@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${product.name} + ' – StyleMart'">Product – StyleMart</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0f1923; --navy2: #1a2736; --gold: #e8a020; --gold2: #f5c842;
+    --cream: #faf7f2; --white: #ffffff; --gray1: #f4f1ec; --gray2: #e0dbd2;
+    --gray3: #a89e92; --gray4: #6b6059; --text: #1a1410; --red: #c0392b;
+    --green: #1e7e34; --radius: 4px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.12); --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); }
+
+  /* NAV */
+  nav { background: var(--navy); color: var(--white); position: sticky; top: 0; z-index: 100; }
+  .nav-top { display: flex; align-items: center; gap: 12px; padding: 10px 20px; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--gold2); text-decoration: none; white-space: nowrap; }
+  .logo span { color: var(--white); font-size: 11px; font-family: 'DM Sans', sans-serif; display: block; font-weight: 300; letter-spacing: 2px; margin-top: -4px; }
+  .nav-search { flex: 1; display: flex; max-width: 700px; }
+  .nav-search input { flex: 1; height: 40px; border: none; padding: 0 12px; font-size: 14px; font-family: 'DM Sans', sans-serif; }
+  .nav-search button { background: var(--gold); border: none; height: 40px; width: 44px; border-radius: 0 var(--radius) var(--radius) 0; cursor: pointer; font-size: 18px; }
+  .nav-actions { display: flex; gap: 4px; margin-left: auto; }
+  .nav-btn { background: transparent; border: none; color: var(--white); cursor: pointer; padding: 6px 10px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 13px; line-height: 1.3; text-align: left; text-decoration: none; display: inline-block; }
+  .nav-btn:hover { background: rgba(255,255,255,0.1); }
+  .nav-btn .line1 { font-size: 11px; color: var(--gray3); display: block; }
+  .nav-btn .line2 { font-size: 14px; font-weight: 600; display: block; }
+  .nav-bottom { background: var(--navy2); padding: 6px 20px; display: flex; gap: 4px; overflow-x: auto; }
+  .nav-bottom a { color: var(--white); font-size: 13px; padding: 4px 10px; border-radius: var(--radius); white-space: nowrap; text-decoration: none; }
+  .nav-bottom a:hover { background: rgba(255,255,255,0.15); }
+
+  /* BREADCRUMB */
+  .breadcrumb { padding: 10px 20px; font-size: 13px; color: var(--gray4); max-width: 1280px; margin: 0 auto; }
+  .breadcrumb a { color: #066; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  /* DETAIL LAYOUT */
+  .detail-layout { display: flex; gap: 32px; flex-wrap: wrap; padding: 24px 20px; max-width: 1200px; margin: 0 auto; }
+
+  /* LEFT - IMAGE */
+  .detail-imgs { flex: 0 0 460px; }
+  .detail-main-img { background: var(--gray1); border-radius: var(--radius); height: 420px; display: flex; align-items: center; justify-content: center; font-size: 140px; margin-bottom: 12px; border: 1px solid var(--gray2); }
+
+  /* MIDDLE - INFO */
+  .detail-info { flex: 1; min-width: 280px; }
+  .detail-brand { font-size: 13px; color: #066; margin-bottom: 4px; }
+  .detail-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; line-height: 1.35; margin-bottom: 10px; }
+  .detail-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray2); }
+  .stars { color: var(--gold); font-size: 16px; }
+  .detail-price-box { margin-bottom: 16px; }
+  .detail-mrp { font-size: 13px; color: var(--gray4); }
+  .detail-price { font-size: 28px; font-weight: 700; }
+  .detail-savings { color: var(--red); font-size: 14px; font-weight: 600; margin-top: 4px; }
+  .detail-badge-tag { background: #cc0c39; color: white; font-size: 11px; font-weight: 700; padding: 3px 6px; border-radius: 2px; margin-left: 8px; }
+  .detail-prime { background: #e8f4fb; border: 1px solid #00a8e1; border-radius: var(--radius); padding: 8px 12px; font-size: 13px; color: #006; margin-bottom: 16px; }
+  .opts-label { font-size: 13px; font-weight: 600; margin-bottom: 8px; margin-top: 12px; }
+
+  /* ADD TO CART FORM */
+  .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; margin-top: 8px; }
+  .qty-row label { font-size: 13px; font-weight: 600; }
+  .qty-row select { padding: 6px 10px; border: 1px solid var(--gray2); border-radius: var(--radius); font-family: 'DM Sans', sans-serif; }
+  .btn-atc { width: 100%; background: var(--gold); border: none; border-radius: 24px; padding: 13px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); cursor: pointer; margin-bottom: 10px; }
+  .btn-atc:hover { background: var(--gold2); }
+  .delivery-info { background: var(--gray1); border-radius: var(--radius); padding: 12px; font-size: 13px; line-height: 1.8; margin-top: 16px; }
+  .delivery-info strong { color: var(--green); }
+
+  /* RIGHT - SIDEBAR */
+  .detail-sidebar { flex: 0 0 240px; }
+  .sidebar-box { background: var(--white); border: 1px solid var(--gray2); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+  .sidebar-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+
+  /* RELATED PRODUCTS */
+  .section { padding: 32px 20px; max-width: 1200px; margin: 0 auto; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+  .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .prod-card { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; text-decoration: none; color: var(--text); transition: box-shadow 0.2s, transform 0.15s; }
+  .prod-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .prod-img { background: var(--gray1); height: 160px; display: flex; align-items: center; justify-content: center; font-size: 60px; }
+  .prod-info { padding: 10px; flex: 1; display: flex; flex-direction: column; }
+  .prod-brand { font-size: 11px; color: var(--gray3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+  .prod-name { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 6px; flex: 1; }
+  .prod-price { font-size: 16px; font-weight: 700; }
+
+  /* SUCCESS TOAST */
+  #toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy); color: var(--white); padding: 12px 20px; border-radius: var(--radius); font-size: 14px; box-shadow: var(--shadow-lg); z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  @media (max-width: 600px) {
+    .detail-layout { flex-direction: column; }
+    .detail-imgs, .detail-sidebar { flex: none; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast">✓ Added to cart!</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-top">
+    <a class="logo" th:href="@{/home}">StyleMart<span>FASHION STORE</span></a>
+    <form class="nav-search" th:action="@{/search}" method="get">
+      <input type="text" name="q" placeholder="Search StyleMart..."/>
+      <button type="submit">🔍</button>
+    </form>
+    <div class="nav-actions">
+      <a class="nav-btn" th:href="@{/account}">
+        <span class="line1">Hello,</span>
+        <span class="line2" th:text="${session.loggedInUser != null ? session.loggedInUser.name : 'Sign In'}">User</span>
+      </a>
+      <a class="nav-btn" th:href="@{/orders}">
+        <span class="line1">Returns &</span>
+        <span class="line2">Orders</span>
+      </a>
+      <a class="nav-btn" th:href="@{/cart}">
+        🛒 <span class="line2">Cart</span>
+      </a>
+    </div>
+  </div>
+  <div class="nav-bottom">
+    <a th:href="@{/home}">🏠 Home</a>
+    <a th:href="@{/products(category='Women')}">👗 Women</a>
+    <a th:href="@{/products(category='Men')}">👔 Men</a>
+    <a th:href="@{/products(category='Kids')}">🧒 Kids</a>
+    <a th:href="@{/products(category='Accessories')}">👜 Accessories</a>
+    <a th:href="@{/products(badge='Sale')}">🔥 Today's Deals</a>
+    <a th:href="@{/products(badge='New')}">✨ New Arrivals</a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a th:href="@{/home}">Home</a> ›
+  <a th:href="@{/products(category=${product.category})}"
+     th:text="${product.category}">Category</a> ›
+  <span th:text="${product.name}">Product Name</span>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="detail-layout">
+
+  <!-- LEFT — Product Image -->
+  <div class="detail-imgs">
+    <div class="detail-main-img">
+      <span th:text="${product.imageUrl}">👗</span>
+    </div>
+  </div>
+
+  <!-- MIDDLE — Product Info + Add to Cart Form -->
+  <div class="detail-info">
+
+    <div class="detail-brand" th:text="${product.brand}">Brand</div>
+    <div class="detail-title" th:text="${product.name}">Product Name</div>
+
+    <!-- Rating -->
+    <div class="detail-rating">
+      <span class="stars">★★★★☆</span>
+      <span style="font-size:13px; color:#066;"
+            th:text="${product.rating} + ' · ' + ${product.reviews} + ' ratings'">
+      </span>
+    </div>
+
+    <!-- Price Box -->
+    <div class="detail-price-box">
+      <div class="detail-mrp">
+        M.R.P.: <span style="text-decoration:line-through"
+                      th:text="'₹' + ${product.mrp}">₹2999</span>
+      </div>
+      <div class="detail-price" th:text="'₹' + ${product.price}">₹1499</div>
+      <div class="detail-savings">
+        You save: ₹<span th:text="${product.mrp - product.price}">1500</span>
+        (<span th:text="${#numbers.formatInteger((product.mrp - product.price) * 100 / product.mrp, 1)}">50</span>% off)
+        <span class="detail-badge-tag"
+              th:if="${product.badge != null and product.badge != ''}"
+              th:text="${product.badge}">Sale</span>
+      </div>
+    </div>
+
+    <!-- Prime Badge -->
+    <div class="detail-prime" th:if="${product.prime}">
+      🔵 <strong>Prime</strong> — FREE delivery <strong>Tomorrow</strong> if you order within 3 hrs.
+    </div>
+
+    <!-- ADD TO CART FORM — wires to POST /cart/add -->
+    <form th:action="@{/cart/add}" method="post">
+
+      <!-- Hidden product ID -->
+      <input type="hidden" name="productId" th:value="${product.id}"/>
+
+      <!-- Quantity -->
+      <div class="qty-row">
+        <label>Qty:</label>
+        <select name="quantity">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-atc">Add to Cart</button>
+
+    </form>
+    <!-- WISHLIST FORM — add right after </form> of Add to Cart -->
+<form th:action="@{/wishlist/add}" method="post" style="margin-top: 10px;">
+    <input type="hidden" name="productId" th:value="${product.id}"/>
+    <button type="submit" style="
+        width: 100%;
+        background: white;
+        border: 2px solid #e0dbd2;
+        border-radius: 24px;
+        padding: 12px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: #0f1923;
+        cursor: pointer;">
+        ❤️ Add to Wishlist
+    </button>
+</form>
+
+<!-- Show success message if just wishlisted -->
+<div th:if="${param.wishlisted}"
+     style="background:#d4edda; border:1px solid #a5d6a7; color:#1b5e20;
+            padding:10px 14px; border-radius:4px; font-size:13px; margin-top:10px;">
+    ❤️ Added to your Wishlist!
+</div>
+
+    <!-- Delivery Info -->
+    <div class="delivery-info">
+      📦 <strong>FREE Delivery</strong> on orders over ₹499<br>
+      🔄 <strong>Easy Return</strong> within 30 days<br>
+      ✅ <strong>Authentic</strong> product guarantee
+    </div>
+
+  </div>
+
+  <!-- RIGHT — Sidebar -->
+  <div class="detail-sidebar">
+    <div class="sidebar-box">
+      <h3>Sold by</h3>
+      <p style="font-size:13px; color:#066;">StyleMart Fashion Store</p>
+      <p style="font-size:12px; color:var(--gray4); margin-top:4px;">98% positive feedback</p>
+    </div>
+    <div class="sidebar-box">
+      <h3>Category</h3>
+      <a th:href="@{/products(category=${product.category})}"
+         th:text="${product.category}"
+         style="font-size:13px; color:#066; text-decoration:none;">
+        Category
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- RELATED PRODUCTS -->
+<div class="section">
+  <div class="section-title">Customers also viewed</div>
+  <div class="prod-grid">
+    <a class="prod-card" th:each="related : ${relatedProducts}"
+       th:href="@{/products/{id}(id=${related.id})}">
+      <div class="prod-img">
+        <span th:text="${related.imageUrl}">👗</span>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand" th:text="${related.brand}">Brand</div>
+        <div class="prod-name" th:text="${related.name}">Name</div>
+        <div class="prod-price" th:text="'₹' + ${related.price}">₹999</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<script>
+  // Show toast if redirected back with success message
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('added') === 'true') {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+</script>
+
+</body>
+</html>

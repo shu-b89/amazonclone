@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Product – StyleMart Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0f1923; --gold: #e8a020; --gold2: #f5c842;
+    --cream: #faf7f2; --white: #ffffff; --gray1: #f4f1ec;
+    --gray2: #e0dbd2; --gray4: #6b6059; --text: #1a1410;
+    --green: #1e7e34; --red: #c0392b; --radius: 4px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--navy); color: white; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--gold2); text-decoration: none; }
+  .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-size: 14px; }
+  .nav-links a:hover { color: var(--gold2); }
+
+  /* MAIN */
+  .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+  .page-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .page-sub { font-size: 14px; color: var(--gray4); margin-bottom: 28px; }
+
+  /* CARD */
+  .form-card { background: var(--white); border-radius: 8px; box-shadow: var(--shadow); padding: 32px; }
+
+  /* FORM ELEMENTS */
+  .form-row { display: flex; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+  .form-group { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { flex: 100%; }
+  label { font-size: 12px; font-weight: 600; color: var(--gray4); text-transform: uppercase; letter-spacing: 0.5px; }
+  input[type="text"], input[type="number"], select {
+    padding: 10px 12px; border: 1px solid var(--gray2); border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text);
+    background: var(--white); outline: none; transition: border-color 0.2s;
+  }
+  input:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(232,160,32,0.15); }
+
+  /* EMOJI PICKER */
+  .emoji-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .emoji-btn {
+    width: 44px; height: 44px; border: 2px solid var(--gray2); border-radius: var(--radius);
+    background: var(--gray1); font-size: 22px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .emoji-btn:hover, .emoji-btn.selected { border-color: var(--gold); background: #fffbe6; transform: scale(1.1); }
+  .emoji-preview { font-size: 36px; margin-top: 6px; min-height: 44px; }
+
+  /* PRIME TOGGLE */
+  .toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .toggle-row label { font-size: 14px; font-weight: 500; color: var(--text); text-transform: none; letter-spacing: 0; }
+  .toggle { position: relative; width: 44px; height: 24px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--gray2); border-radius: 24px; transition: 0.3s; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+  input:checked + .slider { background: var(--gold); }
+  input:checked + .slider:before { transform: translateX(20px); }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--gray2); margin: 24px 0; }
+
+  /* SUBMIT BUTTON */
+  .btn-submit {
+    width: 100%; background: var(--gold); border: none; border-radius: var(--radius);
+    padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700;
+    color: var(--navy); cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-submit:hover { background: var(--gold2); }
+
+  /* ALERTS */
+  .alert-success {
+    background: #d4edda; border: 1px solid #a5d6a7; color: #1b5e20;
+    padding: 14px 18px; border-radius: var(--radius); margin-bottom: 20px;
+    font-size: 14px; display: flex; align-items: center; gap: 8px;
+  }
+
+  /* PRODUCT PREVIEW */
+  .preview-card {
+    background: var(--gray1); border-radius: var(--radius); padding: 16px;
+    margin-top: 24px; border: 1px dashed var(--gray2);
+  }
+  .preview-card h4 { font-size: 12px; font-weight: 600; color: var(--gray4); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .preview-inner { background: white; border-radius: var(--radius); padding: 16px; display: flex; gap: 14px; align-items: center; box-shadow: var(--shadow); }
+  .preview-emoji { font-size: 48px; }
+  .preview-name { font-size: 15px; font-weight: 600; }
+  .preview-brand { font-size: 12px; color: var(--gray4); margin-top: 2px; }
+  .preview-price { font-size: 18px; font-weight: 700; margin-top: 6px; color: var(--navy); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" th:href="@{/home}">StyleMart</a>
+  <div class="nav-links">
+    <a th:href="@{/home}">🏠 Home</a>
+    <a th:href="@{/products}">🛍 Products</a>
+    <span style="color: var(--gold2); margin-left: 20px; font-size: 13px;">🔧 Admin Panel</span>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="container">
+
+  <div class="page-title">➕ Add New Product</div>
+  <div class="page-sub">Fill in the details below to add a product to the StyleMart store.</div>
+
+  <!-- SUCCESS MESSAGE -->
+  <div class="alert-success" th:if="${param.success}">
+    ✅ Product added successfully! <a th:href="@{/products}" style="color:#1b5e20; margin-left:8px;">View in store →</a>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card">
+    <form th:action="@{/admin/add-product}" method="post" id="productForm">
+
+      <!-- Name & Brand -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" name="name" id="inp-name" placeholder="e.g. Floral Wrap Midi Dress" required
+                 oninput="updatePreview()"/>
+        </div>
+        <div class="form-group">
+          <label>Brand</label>
+          <input type="text" name="brand" id="inp-brand" placeholder="e.g. INDYA" required
+                 oninput="updatePreview()"/>
+        </div>
+      </div>
+
+      <!-- Price & MRP -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Selling Price (₹)</label>
+          <input type="number" name="price" id="inp-price" placeholder="e.g. 1299" min="1" required
+                 oninput="updatePreview()"/>
+        </div>
+        <div class="form-group">
+          <label>MRP (₹)</label>
+          <input type="number" name="mrp" id="inp-mrp" placeholder="e.g. 2599" min="1" required/>
+        </div>
+      </div>
+
+      <!-- Category & Badge -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select name="category" required>
+            <option value="" disabled selected>Select category</option>
+            <option value="Women">👗 Women</option>
+            <option value="Men">👔 Men</option>
+            <option value="Kids">🧒 Kids</option>
+            <option value="Accessories">👜 Accessories</option>
+            <option value="Shoes">👟 Shoes</option>
+            <option value="Ethnic">🥻 Ethnic</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Badge</label>
+          <select name="badge">
+            <option value="">None</option>
+            <option value="Sale">🔥 Sale</option>
+            <option value="New">✨ New</option>
+            <option value="Best Seller">⭐ Best Seller</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Rating & Reviews -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Rating (1.0 – 5.0)</label>
+          <input type="number" name="rating" placeholder="e.g. 4.5" min="1" max="5" step="0.1" required/>
+        </div>
+        <div class="form-group">
+          <label>Number of Reviews</label>
+          <input type="number" name="reviews" placeholder="e.g. 3241" min="0" required/>
+        </div>
+      </div>
+
+      <hr class="divider"/>
+
+      <!-- Emoji Picker -->
+      <div class="form-group full" style="margin-bottom: 18px;">
+        <label>Product Emoji / Icon</label>
+        <input type="hidden" name="imageUrl" id="inp-emoji" value="👗"/>
+        <div class="emoji-grid">
+          <button type="button" class="emoji-btn selected" onclick="selectEmoji(this, '👗')">👗</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '👔')">👔</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '🥻')">🥻</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '👜')">👜</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '👟')">👟</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '👕')">👕</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '🧥')">🧥</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '🩳')">🩳</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '👖')">👖</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '🧣')">🧣</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '🎀')">🎀</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '🩲')">🩲</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '👒')">👒</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '🕶️')">🕶️</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '💍')">💍</button>
+          <button type="button" class="emoji-btn" onclick="selectEmoji(this, '👠')">👠</button>
+        </div>
+      </div>
+
+      <hr class="divider"/>
+
+      <!-- Prime Toggle -->
+      <div class="toggle-row">
+        <label class="toggle">
+          <input type="checkbox" name="prime" id="inp-prime" value="true"/>
+          <span class="slider"></span>
+        </label>
+        <label for="inp-prime">🔵 Prime Product (FREE Delivery)</label>
+      </div>
+
+      <!-- LIVE PREVIEW -->
+      <div class="preview-card">
+        <h4>Live Preview</h4>
+        <div class="preview-inner">
+          <div class="preview-emoji" id="prev-emoji">👗</div>
+          <div>
+            <div class="preview-name" id="prev-name">Product Name</div>
+            <div class="preview-brand" id="prev-brand">Brand</div>
+            <div class="preview-price" id="prev-price">₹0</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider"/>
+
+      <!-- SUBMIT -->
+      <button type="submit" class="btn-submit">
+        ➕ Add Product to Store
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<script>
+function selectEmoji(btn, emoji) {
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('inp-emoji').value = emoji;
+  document.getElementById('prev-emoji').textContent = emoji;
+}
+
+function updatePreview() {
+  const name = document.getElementById('inp-name').value || 'Product Name';
+  const brand = document.getElementById('inp-brand').value || 'Brand';
+  const price = document.getElementById('inp-price').value || '0';
+  document.getElementById('prev-name').textContent = name;
+  document.getElementById('prev-brand').textContent = brand;
+  document.getElementById('prev-price').textContent = '₹' + parseInt(price).toLocaleString('en-IN');
+}
+</script>
+
+</body>
+</html>

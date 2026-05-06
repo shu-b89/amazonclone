@@ -9,7 +9,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     private String name;
 
@@ -17,20 +17,18 @@ public class User {
     private String email;
 
     private String password;
-
     private String phone;
-
     private String role;
-
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        if (this.role == null) this.role = "USER";
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -42,23 +40,11 @@ public class User {
     public void setPassword(String password) { this.password = password; }
 
     public String getPhone() { return phone; }
-//    public void setPhone(String phone) { this.phone = phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
     public String getRole() { return role; }
-//    public void setRole(String role) { this.role = role; }
+    public void setRole(String role) { this.role = role; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-	public void setPhone(String phone2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setRole(String string) {
-		
-		// TODO Auto-generated method stub
-		
-	}
-
 }

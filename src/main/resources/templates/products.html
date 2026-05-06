@@ -90,20 +90,27 @@
         <span class="line1">Returns &</span>
         <span class="line2">Orders</span>
       </a>
-      <a class="nav-btn" th:href="@{/cart}">
-        🛒 <span class="line2">Cart</span>
-      </a>
+      <a class="nav-btn" th:href="@{/cart}" style="position:relative;">
+  🛒 <span class="line2">Cart</span>
+  <span th:if="${cartCount != null and cartCount > 0}"
+        style="position:absolute; top:2px; right:4px; background:#e8a020;
+               color:#0f1923; border-radius:50%; width:18px; height:18px;
+               font-size:11px; font-weight:700; display:flex;
+               align-items:center; justify-content:center;"
+        th:text="${cartCount}">0</span>
+</a>
     </div>
   </div>
-  <div class="nav-bottom">
-    <a th:href="@{/home}">🏠 Home</a>
-    <a th:href="@{/products(category='Women')}">👗 Women</a>
-    <a th:href="@{/products(category='Men')}">👔 Men</a>
-    <a th:href="@{/products(category='Kids')}">🧒 Kids</a>
-    <a th:href="@{/products(category='Accessories')}">👜 Accessories</a>
-    <a th:href="@{/products(badge='Sale')}">🔥 Today's Deals</a>
-    <a th:href="@{/products(badge='New')}">✨ New Arrivals</a>
-  </div>
+	<div class="nav-bottom">
+	  <a th:href="@{/home}">🏠 Home</a>
+	  <a th:href="@{/products}">🌐 All</a>
+	  <a th:href="@{/products(category='Fashion')}">👗 Fashion</a>
+	  <a th:href="@{/products(category='Electronics')}">🎧 Electronics</a>
+	  <a th:href="@{/products(category='Decor')}">🖼️ Home & Decor</a>
+	  <a th:href="@{/products(category='Beauty')}">💄 Beauty</a>
+	  <a th:href="@{/products(category='Accessories')}">👜 Accessories</a>
+	  <a th:href="@{/products(badge='Sale')}">🔥 Today's Deals</a>
+	</div>
 </nav>
 
 <!-- BREADCRUMB -->
@@ -125,19 +132,21 @@
 
   <!-- FILTER BUTTONS -->
   <div class="filter-bar">
-    <a class="filter-btn" th:href="@{/products}"
-       th:classappend="${selectedCategory == null and selectedBadge == null and searchQuery == null} ? 'active' : ''">All</a>
-    <a class="filter-btn" th:href="@{/products(category='Women')}"
-       th:classappend="${selectedCategory == 'Women'} ? 'active' : ''">Women</a>
-    <a class="filter-btn" th:href="@{/products(category='Men')}"
-       th:classappend="${selectedCategory == 'Men'} ? 'active' : ''">Men</a>
-    <a class="filter-btn" th:href="@{/products(category='Kids')}"
-       th:classappend="${selectedCategory == 'Kids'} ? 'active' : ''">Kids</a>
-    <a class="filter-btn" th:href="@{/products(category='Accessories')}"
-       th:classappend="${selectedCategory == 'Accessories'} ? 'active' : ''">Accessories</a>
-    <a class="filter-btn" th:href="@{/products(badge='Sale')}"
-       th:classappend="${selectedBadge == 'Sale'} ? 'active' : ''">On Sale</a>
-  </div>
+  <a class="filter-btn" th:href="@{/products}"
+     th:classappend="${selectedCategory == null and selectedBadge == null and searchQuery == null} ? 'active' : ''">All</a>
+  <a class="filter-btn" th:href="@{/products(category='Fashion')}"
+     th:classappend="${selectedCategory == 'Fashion'} ? 'active' : ''">👗 Fashion</a>
+  <a class="filter-btn" th:href="@{/products(category='Electronics')}"
+     th:classappend="${selectedCategory == 'Electronics'} ? 'active' : ''">🎧 Electronics</a>
+  <a class="filter-btn" th:href="@{/products(category='Decor')}"
+     th:classappend="${selectedCategory == 'Decor'} ? 'active' : ''">🖼️ Decor</a>
+  <a class="filter-btn" th:href="@{/products(category='Beauty')}"
+     th:classappend="${selectedCategory == 'Beauty'} ? 'active' : ''">💄 Beauty</a>
+  <a class="filter-btn" th:href="@{/products(category='Accessories')}"
+     th:classappend="${selectedCategory == 'Accessories'} ? 'active' : ''">👜 Accessories</a>
+  <a class="filter-btn" th:href="@{/products(badge='Sale')}"
+     th:classappend="${selectedBadge == 'Sale'} ? 'active' : ''">🔥 On Sale</a>
+</div>
 
   <!-- PRODUCT GRID -->
   <div class="prod-grid">
@@ -145,8 +154,11 @@
     <!-- Product Cards from DB -->
     <a class="prod-card" th:each="product : ${products}"
        th:href="@{/products/{id}(id=${product.id})}">
-      <div class="prod-img">
-        <span th:text="${product.imageUrl}">👗</span>
+      <div class="prod-img" style="height:200px; overflow:hidden; background:#f4f1ec;">
+  <img th:src="${product.imageUrl}"
+       th:alt="${product.name}"
+       style="width:100%; height:100%; object-fit:cover;"
+       onerror="this.style.display='none'"/>
         <span class="prod-badge"
               th:if="${product.badge != null and product.badge != ''}"
               th:text="${product.badge}">Sale</span>
@@ -168,7 +180,11 @@
           </span>
         </div>
         <div class="prod-prime" th:if="${product.prime}">🔵 Prime FREE Delivery</div>
-        <button class="btn-cart" onclick="event.preventDefault()">Add to Cart</button>
+        <form th:action="@{/cart/add}" method="post" onclick="event.stopPropagation()">
+  <input type="hidden" name="productId" th:value="${product.id}"/>
+  <input type="hidden" name="quantity" value="1"/>
+  <button type="submit" class="btn-cart">Add to Cart</button>
+</form>
       </div>
     </a>
 

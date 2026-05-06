@@ -1,12 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Product;
+import com.example.demo.services.CartService;
 import com.example.demo.services.ProductService;
 import com.example.demo.repoository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -157,5 +159,19 @@ public class ProductController {
         }
 
         return "wishlist";
+    }
+    @Autowired
+    private CartService cartService;
+
+    @ModelAttribute
+    public void addCartCount(
+            jakarta.servlet.http.HttpSession session,
+            Model model) {
+        Object user = session.getAttribute("loggedInUser");
+        Long userId = 1L;
+        if (user instanceof com.example.demo.entity.User) {
+            userId = (long) ((com.example.demo.entity.User) user).getId();
+        }
+        model.addAttribute("cartCount", cartService.getCartCount(userId));
     }
 }

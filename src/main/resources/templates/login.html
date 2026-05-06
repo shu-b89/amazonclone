@@ -1,10 +1,153 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login – StyleMart</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0f1923; --gold: #e8a020; --gold2: #f5c842;
+    --cream: #faf7f2; --white: #ffffff; --gray1: #f4f1ec;
+    --gray2: #e0dbd2; --gray4: #6b6059; --text: #1a1410;
+    --red: #c0392b; --green: #1e7e34; --radius: 4px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.12);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.18);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* NAV */
+  nav { background: var(--navy); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--gold2); text-decoration: none; }
+  .logo span { color: white; font-size: 11px; display: block; font-weight: 300; letter-spacing: 2px; margin-top: -4px; }
+  .nav-links a { color: white; text-decoration: none; font-size: 14px; margin-left: 16px; }
+  .nav-links a:hover { color: var(--gold2); }
+
+  /* MAIN */
+  .main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+  .card { background: var(--white); border-radius: 8px; box-shadow: var(--shadow-lg); padding: 40px; width: 100%; max-width: 420px; }
+
+  /* LOGO INSIDE CARD */
+  .card-logo { text-align: center; margin-bottom: 24px; }
+  .card-logo div { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--navy); }
+  .card-logo span { font-size: 12px; color: var(--gray4); letter-spacing: 2px; }
+
+  /* TITLE */
+  .card-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; text-align: center; }
+  .card-sub { font-size: 14px; color: var(--gray4); text-align: center; margin-bottom: 28px; }
+
+  /* ALERTS */
+  .alert-error { background: #fdecea; border: 1px solid #f5c6cb; color: var(--red); padding: 12px 16px; border-radius: var(--radius); font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .alert-success { background: #d4edda; border: 1px solid #a5d6a7; color: var(--green); padding: 12px 16px; border-radius: var(--radius); font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+
+  /* FORM */
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--gray4); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .form-group input { width: 100%; padding: 11px 14px; border: 1px solid var(--gray2); border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
+  .form-group input:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(232,160,32,0.15); }
+
+  /* PASSWORD TOGGLE */
+  .pass-wrap { position: relative; }
+  .pass-wrap input { padding-right: 44px; }
+  .pass-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px; color: var(--gray4); }
+
+  /* SUBMIT */
+  .btn-submit { width: 100%; background: var(--gold); border: none; border-radius: var(--radius); padding: 13px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+  .btn-submit:hover { background: var(--gold2); }
+
+  /* DIVIDER */
+  .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+  .divider::before, .divider::after { content: ''; flex: 1; border-top: 1px solid var(--gray2); }
+  .divider span { font-size: 12px; color: var(--gray4); }
+
+  /* REGISTER LINK */
+  .register-link { text-align: center; font-size: 14px; color: var(--gray4); margin-top: 20px; }
+  .register-link a { color: var(--navy); font-weight: 600; text-decoration: none; }
+  .register-link a:hover { color: var(--gold); }
+
+  /* FOOTER */
+  .footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 14px; font-size: 12px; }
+</style>
+</head>
 <body>
 
-<h2>Login Page</h2>
+<!-- NAV -->
+<nav>
+  <a class="logo" th:href="@{/home}">StyleMart<span>FASHION STORE</span></a>
+  <div class="nav-links">
+    <a th:href="@{/home}">Home</a>
+    <a th:href="@{/register}">Register</a>
+  </div>
+</nav>
 
-<p th:if="${success}" th:text="${success}"></p>
+<!-- MAIN -->
+<div class="main">
+  <div class="card">
+
+    <!-- Logo -->
+    <div class="card-logo">
+      <div>StyleMart</div>
+      <span>FASHION STORE</span>
+    </div>
+
+    <div class="card-title">Welcome Back!</div>
+    <div class="card-sub">Sign in to your StyleMart account</div>
+
+    <!-- Error Message -->
+    <div class="alert-error" th:if="${error}">
+      ⚠️ <span th:text="${error}">Error message</span>
+    </div>
+
+    <!-- Success Message -->
+    <div class="alert-success" th:if="${success}">
+      ✅ <span th:text="${success}">Success message</span>
+    </div>
+
+    <!-- Flash success from register -->
+    <div class="alert-success" th:if="${successMsg}">
+      ✅ <span th:text="${successMsg}">Success</span>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form th:action="@{/login}" method="post">
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="rahul@email.com" required/>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <div class="pass-wrap">
+          <input type="password" name="password" id="passwordField" placeholder="Enter your password" required/>
+          <button type="button" class="pass-toggle" onclick="togglePassword()">👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">Sign In →</button>
+
+    </form>
+
+    <div class="divider"><span>New to StyleMart?</span></div>
+
+    <div class="register-link">
+      Don't have an account?
+      <a th:href="@{/register}">Create one here</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">© 2025 StyleMart Fashion Store. All rights reserved.</div>
+
+<script>
+function togglePassword() {
+  const field = document.getElementById('passwordField');
+  field.type = field.type === 'password' ? 'text' : 'password';
+}
+</script>
 
 </body>
 </html>

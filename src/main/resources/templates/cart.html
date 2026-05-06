@@ -105,10 +105,15 @@
         <span class="line1">Returns &</span>
         <span class="line2">Orders</span>
       </a>
-      <a class="nav-btn" th:href="@{/cart}" style="position:relative">
-        🛒 <span class="line2">Cart</span>
-        <span class="cart-count-badge" th:text="${cartCount > 0 ? cartCount : ''}"></span>
-      </a>
+<a class="nav-btn" th:href="@{/cart}" style="position:relative;">
+  🛒 <span class="line2">Cart</span>
+  <span th:if="${cartCount != null and cartCount > 0}"
+        style="position:absolute; top:2px; right:4px; background:#e8a020;
+               color:#0f1923; border-radius:50%; width:18px; height:18px;
+               font-size:11px; font-weight:700; display:flex;
+               align-items:center; justify-content:center;"
+        th:text="${cartCount}">0</span>
+</a>
     </div>
   </div>
   <div class="nav-bottom">
@@ -137,8 +142,12 @@
 
         <!-- Product Image — now shows real emoji -->
 <a class="cart-item-img"
-   th:href="@{/products/{id}(id=${item.productId})}">
-  <span th:text="${productMap[item.productId] != null ? productMap[item.productId].imageUrl : '🛍️'}">🛍️</span>
+   th:href="@{/products/{id}(id=${item.productId})}"
+   style="overflow:hidden; display:flex; align-items:center; justify-content:center;">
+  <img th:src="${productMap[item.productId] != null ? productMap[item.productId].imageUrl : ''}"
+       th:alt="${productMap[item.productId] != null ? productMap[item.productId].name : 'Product'}"
+       style="width:100%; height:100%; object-fit:cover;"
+       onerror="this.style.display='none'"/>
 </a>
 
 <div class="cart-item-info">
@@ -213,32 +222,54 @@
 
   </div>
 
-  <!-- ORDER SUMMARY -->
-  <div class="cart-summary" th:if="${not #lists.isEmpty(items)}">
-    <div class="summary-box">
-      <h3>Order Summary</h3>
-      <div class="summary-row">
-        <span>Items (<span th:text="${totalQty}">0</span>):</span>
-        <span>₹<span th:text="${#numbers.formatInteger(total, 1, 'COMMA')}">0</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Delivery:</span>
-        <span style="color:var(--green)">FREE</span>
-      </div>
-      <div class="summary-row total">
-        <span>Order Total:</span>
-        <span>₹<span th:text="${#numbers.formatInteger(total, 1, 'COMMA')}">0</span></span>
-      </div>
-      <div class="summary-savings">
-        🎉 You are saving on delivery charges!
-      </div>
-      <a class="btn-checkout" th:href="@{/checkout}">
-        Proceed to Checkout
-      </a>
-      <div class="secure-msg">🔒 Safe and Secure Payments</div>
-    </div>
-  </div>
+<!-- ORDER SUMMARY -->
+<div class="cart-summary" th:if="${not #lists.isEmpty(items)}">
+  <div class="summary-box">
+    <h3>Order Summary</h3>
 
+    <!-- Items count -->
+    <div class="summary-row">
+      <span>Price (<span th:text="${totalQty}">0</span> items):</span>
+      <span>₹<span th:text="${#numbers.formatInteger(mrpTotal, 1, 'COMMA')}">0</span></span>
+    </div>
+
+    <!-- Delivery -->
+    <div class="summary-row">
+      <span>Delivery:</span>
+      <span style="color:var(--green)">FREE</span>
+    </div>
+
+    <!-- Discount -->
+    <div class="summary-row">
+      <span>Discount:</span>
+      <span style="color:var(--red)">
+        -₹<span th:text="${#numbers.formatInteger(mrpTotal - total, 1, 'COMMA')}">0</span>
+      </span>
+    </div>
+
+    <!-- Divider -->
+    <hr style="border:none; border-top:1px solid #e0dbd2; margin:10px 0;"/>
+
+    <!-- Grand Total -->
+    <div class="summary-row total">
+      <span>Order Total:</span>
+      <span>₹<span th:text="${#numbers.formatInteger(total, 1, 'COMMA')}">0</span></span>
+    </div>
+
+    <!-- Savings message -->
+    <div class="summary-savings"
+         th:if="${mrpTotal > total}">
+      🎉 You are saving
+      ₹<span th:text="${#numbers.formatInteger(mrpTotal - total, 1, 'COMMA')}">0</span>
+      on this order!
+    </div>
+
+    <!-- Proceed to Checkout -->
+    <a class="btn-checkout" th:href="@{/checkout}">
+      Proceed to Checkout
+    </a>
+    <div class="secure-msg">🔒 Safe and Secure Payments</div>
+  </div>
 </div>
 
 </body>

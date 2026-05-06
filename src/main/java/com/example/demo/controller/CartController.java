@@ -31,9 +31,9 @@ public class CartController {
         Long userId = getSessionUserId(session);
         List<CartItem> items = cartService.getCart(userId);
 
-        // Build a map of productId -> Product for the view
         Map<Long, Product> productMap = new HashMap<>();
         double total = 0;
+        double mrpTotal = 0;
         int totalQty = 0;
 
         for (CartItem item : items) {
@@ -43,6 +43,7 @@ public class CartController {
             if (product != null) {
                 productMap.put(item.getProductId(), product);
                 total += product.getPrice() * item.getQuantity();
+                mrpTotal += product.getMrp() * item.getQuantity();
             }
             totalQty += item.getQuantity();
         }
@@ -50,10 +51,10 @@ public class CartController {
         model.addAttribute("items", items);
         model.addAttribute("productMap", productMap);
         model.addAttribute("total", total);
+        model.addAttribute("mrpTotal", mrpTotal);
         model.addAttribute("totalQty", totalQty);
         return "cart";
     }
-
     // POST /cart/add
     @PostMapping("/add")
     public String addItem(

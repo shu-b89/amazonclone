@@ -7,38 +7,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.entity.User;
-
 @Controller
-
 public class AccountController {
-	@GetMapping("/account")
-	public String account(HttpSession session, Model model, RedirectAttributes redirectAttributes) {
 
-	    User loggedInUser = (User) session.getAttribute("loggedInUser");
-
-	    if (loggedInUser == null) {
-	        redirectAttributes.addFlashAttribute("error", "Please login to continue");
-	        return "redirect:/login";
-	    }
-
-	    model.addAttribute("user", loggedInUser);
-	    return "account";
-
-	    
-	    
-	}
-
-	public boolean existsByEmail(String email) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public org.springframework.boot.security.autoconfigure.SecurityProperties.User save(
-			org.springframework.boot.security.autoconfigure.SecurityProperties.User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
+    @GetMapping("/account")
+    public String account(HttpSession session, Model model,
+                          RedirectAttributes redirectAttributes) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            redirectAttributes.addFlashAttribute("error",
+                "Please login to continue");
+            return "redirect:/login";
+        }
+        model.addAttribute("user", loggedInUser);
+        return "account";
+    }
 }
